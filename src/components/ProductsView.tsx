@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import {
-    Container, Grid, Card, CardContent, CardMedia, Typography,
+    Container, Card, CardContent, CardMedia, Typography,
     CircularProgress, Box, Pagination, Rating,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -16,17 +16,15 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
     const { currentPage, itemsPerPage } = useAppSelector((state) => state.ui);
 
     useEffect(() => {
-        // Sayfa ilk açıldığında veri yoksa initialData'yı kullan
+        // İlk yüklemede initialData kullan, sonrasında sayfa değişikliklerinde API'den çek
         if (initialData && items.length === 0) {
             dispatch(setProducts(initialData));
+            return; // İlk yüklemede API çağrısı yapma
         }
-    }, [dispatch, initialData, items.length]);
-
-    useEffect(() => {
         // Sayfa veya sayfa başı ürün sayısı değişince yeni veri çek
         const skip = (currentPage - 1) * itemsPerPage;
         dispatch(fetchProductsAsync({ limit: itemsPerPage, skip }));
-    }, [dispatch, currentPage, itemsPerPage]);
+    }, [dispatch, currentPage, itemsPerPage, initialData, items.length]);
 
     const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
         dispatch(setPage(page));
@@ -53,19 +51,52 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
                 {total} products found
             </Typography>
 
-            <Grid container spacing={3} mt={2}>
+            <Box 
+                sx={{ 
+                    display: 'grid',
+                    gridTemplateColumns: {
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(2, 1fr)',
+                        md: 'repeat(3, 1fr)',
+                        lg: 'repeat(4, 1fr)'
+                    },
+                    gap: 3,
+                    mt: 2
+                }}
+            >
                 {items.map((product) => (
-                    <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Box key={String(product.id)} sx={{ height: '100%' }}>
+                        <Card sx={{ 
+                            height: '420px', 
+                            display: 'flex', 
+                            flexDirection: 'column',
+                            transition: 'transform 0.2s, box-shadow 0.2s',
+                            '&:hover': {
+                                transform: 'translateY(-4px)',
+                                boxShadow: 4
+                            }
+                        }}>
                             <CardMedia
                                 component="img"
-                                height="200"
+                                height="180"
                                 image={product.thumbnail}
                                 alt={product.title}
-                                sx={{ objectFit: 'contain', p: 2, bgcolor: '#f5f5f5' }}
+                                sx={{ objectFit: 'contain', p: 2, bgcolor: '#f5f5f5', minHeight: '180px', maxHeight: '180px' }}
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
-                                <Typography gutterBottom variant="h6" component="div" noWrap>
+                                <Typography 
+                                    gutterBottom 
+                                    variant="h6" 
+                                    component="div" 
+                                    sx={{ 
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: 'vertical',
+                                        minHeight: '64px'
+                                    }}
+                                >
                                     {product.title}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -80,9 +111,9 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
                                 </Typography>
                             </CardContent>
                         </Card>
-                    </Grid>
+                    </Box>
                 ))}
-            </Grid>
+            </Box>
 
             <Box display="flex" justifyContent="center" mt={4}>
                 <Pagination
