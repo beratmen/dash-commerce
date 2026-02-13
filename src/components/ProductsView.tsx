@@ -5,6 +5,7 @@ import {
     Container, Card, CardContent, CardMedia, Typography,
     CircularProgress, Box, Pagination, Rating,
 } from '@mui/material';
+import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProductsAsync, setProducts } from '@/store/slices/productSlice';
 import { setPage } from '@/store/slices/uiSlice';
@@ -68,24 +69,26 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
             >
                 {items.map((product) => (
                     <Box key={String(product.id)} sx={{ height: '100%' }}>
-                        <Card sx={{ 
-                            height: '420px', 
-                            display: 'flex', 
-                            flexDirection: 'column',
-                            transition: 'transform 0.2s, box-shadow 0.2s',
-                            '&:hover': {
-                                transform: 'translateY(-4px)',
-                                boxShadow: 4
-                            }
-                        }}>
-                            <CardMedia
-                                component="img"
-                                height="180"
-                                image={product.thumbnail}
-                                alt={product.title}
-                                sx={{ objectFit: 'contain', p: 2, bgcolor: '#f5f5f5', minHeight: '180px', maxHeight: '180px' }}
-                            />
-                            <CardContent sx={{ flexGrow: 1 }}>
+                        <Link href={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+                            <Card sx={{ 
+                                height: '420px', 
+                                display: 'flex', 
+                                flexDirection: 'column',
+                                transition: 'transform 0.2s, box-shadow 0.2s',
+                                '&:hover': {
+                                    transform: 'translateY(-4px)',
+                                    boxShadow: 4,
+                                    cursor: 'pointer' // Tıklanabilir olduğunu göster
+                                }
+                            }}>
+                                <CardMedia
+                                    component="img"
+                                    height="180"
+                                    image={product.thumbnail}
+                                    alt={product.title}
+                                    sx={{ objectFit: 'contain', p: 2, bgcolor: '#f5f5f5', minHeight: '180px', maxHeight: '180px' }}
+                                />
+                                <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography 
                                     gutterBottom 
                                     variant="h6" 
@@ -113,8 +116,9 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
                                 </Typography>
                             </CardContent>
                         </Card>
-                    </Box>
-                ))}
+                    </Link>
+                </Box>
+            ))}
             </Box>
 
             <Box display="flex" justifyContent="center" mt={4}>

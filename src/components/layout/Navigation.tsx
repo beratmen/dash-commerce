@@ -84,11 +84,11 @@ export default function Navigation() {
                             <Box
                                 sx={{
                                     width: 48, height: 48,
-                                    background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)', // Parlak Mavi
+                                    background: 'linear-gradient(135deg, #0d9488 0%, #115e59 100%)', // Site Teması (Teal)
                                     borderRadius: 3, // Biraz daha yuvarlak
                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                     color: 'white',
-                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+                                    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
                                     '&:hover': { transform: 'rotate(12deg)' } // Dönme efekti
                                 }}
                             >

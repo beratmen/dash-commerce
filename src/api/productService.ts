@@ -4,7 +4,7 @@ import axiosInstance from '@/api/axios';
 
 // API'den dönecek verinin yapısını (şemasını) belirten TypeScript tipi.
 // Bu sayede 'response.data' içinde hangi alanların olduğunu editörümüz bilir.
-import { ProductResponse } from '@/types';
+import { ProductResponse, Product } from '@/types';
 
 /**
  * Ürünleri getirmek için kullanılan asenkron fonksiyon.
@@ -32,4 +32,10 @@ export const fetchProducts = async (limit: number = 20, skip: number = 0, search
         // hata durumunda kullanıcıya bir uyarı gösterebilsin.
         throw error;
     }
+};
+
+// Tekil ürün detayı getirme fonksiyonu
+export const fetchProductById = async (id: string): Promise<Product> => {
+    const response = await axiosInstance.get<Product>(`/products/${id}`);
+    return response.data;
 };
