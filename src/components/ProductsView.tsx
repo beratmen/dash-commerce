@@ -13,18 +13,20 @@ import { ProductsViewProps } from '@/types';
 export default function ProductsView({ initialData }: ProductsViewProps) {
     const dispatch = useAppDispatch();
     const { items, total, loading, error } = useAppSelector((state) => state.products);
-    const { currentPage, itemsPerPage } = useAppSelector((state) => state.ui);
+    const { currentPage, itemsPerPage, searchQuery } = useAppSelector((state) => state.ui);
 
     useEffect(() => {
         // İlk yüklemede initialData kullan, sonrasında sayfa değişikliklerinde API'den çek
-        if (initialData && items.length === 0) {
+        // Not: Arama yapıldıysa initialData'yı yoksaymalıyız çünkü initialData filtrelenmemiş olabilir
+        if (initialData && items.length === 0 && !searchQuery) {
             dispatch(setProducts(initialData));
             return; // İlk yüklemede API çağrısı yapma
         }
+        
         // Sayfa veya sayfa başı ürün sayısı değişince yeni veri çek
         const skip = (currentPage - 1) * itemsPerPage;
-        dispatch(fetchProductsAsync({ limit: itemsPerPage, skip }));
-    }, [dispatch, currentPage, itemsPerPage, initialData, items.length]);
+        dispatch(fetchProductsAsync({ limit: itemsPerPage, skip, search: searchQuery }));
+    }, [dispatch, currentPage, itemsPerPage, initialData, items.length, searchQuery]);
 
     const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
         dispatch(setPage(page));

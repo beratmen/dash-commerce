@@ -19,8 +19,8 @@ const initialState: ProductState = {
 // Basit asenkron ürün çekme işlemi
 export const fetchProductsAsync = createAsyncThunk(
     'products/fetchAll',
-    async ({ limit, skip }: { limit: number; skip: number }) => {
-        return await fetchProducts(limit, skip);
+    async ({ limit, skip, search }: { limit: number; skip: number; search?: string }) => {
+        return await fetchProducts(limit, skip, search || '');
     }
 );
 

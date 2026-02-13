@@ -12,12 +12,15 @@ import { ProductResponse } from '@/types';
  * @param skip - Kaçıncı üründen başlanacak? (Sayfalama/Pagination için kullanılır, Varsayılan: 0)
  * @returns Promise<ProductResponse> - API'den gelen ürün verilerini döndürür.
  */
-export const fetchProducts = async (limit: number = 20, skip: number = 0): Promise<ProductResponse> => {
+export const fetchProducts = async (limit: number = 20, skip: number = 0, search: string = ''): Promise<ProductResponse> => {
     try {
-        // GET isteği atılır. 
-        // Generics kullanılarak <ProductResponse> ile gelen verinin tipi tanımlanır.
-        // Query params (?limit=20&skip=0) URL'e eklenerek sunucuya gönderilir.
-        const response = await axiosInstance.get<ProductResponse>(`/products?limit=${limit}&skip=${skip}`);
+        let url = `/products?limit=${limit}&skip=${skip}`;
+
+        if (search) {
+            url = `/products/search?q=${search}&limit=${limit}&skip=${skip}`;
+        }
+
+        const response = await axiosInstance.get<ProductResponse>(url);
 
         // Axios'ta asıl veri her zaman 'data' objesinin içindedir.
         return response.data;

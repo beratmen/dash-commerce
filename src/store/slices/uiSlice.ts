@@ -5,13 +5,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface UiState {
     currentPage: number;       // Şu an kaçıncı sayfadayız?
     itemsPerPage: number;      // Bir sayfada kaç ürün gösterilecek?
+    searchQuery: string;       // Arama sorgusu String olarak saklanır
 }
 
 // 2. BAŞLANGIÇ DURUMU (initialState)
 // Uygulama ilk açıldığında bu değerler ne olsun?
 const initialState: UiState = {
     currentPage: 1,            // 1. sayfadan başlansın
-    itemsPerPage: 20,          // Sayfa başına 20 ürün gelsin
+    itemsPerPage: 20,         // Sayfa başına 20 ürün gelsin
+    searchQuery: '',          // Arama sorgusu boş başlaması için boş string
 };
 
 // 3. SLICE (Dilim) OLUŞTURMA
@@ -27,6 +29,11 @@ const uiSlice = createSlice({
         setPage(state, action: PayloadAction<number>) {
             state.currentPage = action.payload; // Gelen sayfa numarasını hafızada güncelle
         },
+        setSearchQuery(state, action: PayloadAction<string>) {
+            state.searchQuery = action.payload;
+            state.currentPage = 1;
+            // Gelen arama sorgusunu hafızada güncelle Arama yapıldığında 1.sayfaya gider
+        },
     },
 });
 
@@ -34,7 +41,7 @@ const uiSlice = createSlice({
 
 // Fonksiyonları (Actions) ihraç ediyoruz ki bileşenlerden (components) çağırabilelim.
 // Örn: dispatch(setPage(2)) diyerek sayfayı değiştirebileceğiz.
-export const { setPage } = uiSlice.actions;
+export const { setPage, setSearchQuery } = uiSlice.actions; //actions dışarı aktarıyoruz
 
 // Reducer'ı ihraç ediyoruz ki ana store.ts dosyasına kaydedebilelim.
 export default uiSlice.reducer;
