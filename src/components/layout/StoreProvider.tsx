@@ -3,28 +3,25 @@
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 import { makeStore, AppStore } from '@/store/store';
+import { setCartItems, getInitialCartItems } from '@/store/slices/cartSlice';
 
 // 1. StoreProvider Bileşeni
 // Uygulamayı saran ve tüm alt bileşenlerin Redux'a erişmesini sağlayan yapıdır.
-export default function StoreProvider({
-    children,
-}: {
-    children: React.ReactNode; // Bu Provider'ın içine girecek olan tüm HTML/Bileşenler
-}) {
-    // 2. useRef Kullanımı
-    // Neden useRef? Sayfa her yenilendiğinde veya bileşen tekrar render olduğunda 
-    // yeni bir Store (hafıza) oluşturulmasın, mevcut olan korunsun diye.
+export default function StoreProvider({ children }: { children: React.ReactNode }) {
+    // 2. useRef Kullanımı - Sayfa her yenilendiğinde yeni Store oluşturulmasın diye.
     const storeRef = useRef<AppStore | null>(null);
 
-    // 3. Store Oluşturma
-    // Eğer store henüz oluşturulmadıysa (ilk açılış), makeStore() fonksiyonunu çağırıp 
-    // hafızayı belleğe (storeRef.current) alıyoruz.
+    // 3. Store Oluşturma - İlk açılışta makeStore(), tarayıcıdaysa sepet localStorage'dan yüklenir.
     if (!storeRef.current) {
         storeRef.current = makeStore();
+        if (typeof window !== 'undefined') {
+            const items = getInitialCartItems();
+            if (items.length > 0) {
+                storeRef.current.dispatch(setCartItems(items));
+            }
+        }
     }
 
     // 4. Provider ile Sarmalama
-    // Redux'un kendi Provider bileşenini kullanarak, oluşturduğumuz store'u 
-    // tüm uygulamaya (children) dağıtıyoruz.
     return <Provider store={storeRef.current}>{children}</Provider>;
 }

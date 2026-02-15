@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Container, Typography, Box, Rating, Button, Chip, Divider, Paper
 } from '@mui/material';
 import { ShoppingCart, ArrowBack } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/store/hooks';
-import { setSelectedProduct } from '@/store/slices/productSlice';
+import { addToCart } from '@/store/slices/cartSlice';
 import { Product } from '@/types';
 
 interface ProductDetailViewProps {
@@ -18,19 +18,12 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
     const dispatch = useAppDispatch();
     const router = useRouter();
 
-    // SSR'dan gelen veriyi Redux'a yükle (Hydration)
-    useEffect(() => {
-        if (product) {
-            dispatch(setSelectedProduct(product));
-        }
-    }, [dispatch, product]);
-
     return (
         <Container maxWidth="lg" sx={{ py: 6 }}>
             {/* Geri Dön Butonu */}
-            <Button 
-                startIcon={<ArrowBack />} 
-                onClick={() => router.back()} 
+            <Button
+                startIcon={<ArrowBack />}
+                onClick={() => router.back()}
                 sx={{ mb: 4 }}
                 color="inherit"
             >
@@ -39,33 +32,27 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
 
             {/* Responsive Flex Layout */}
             <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={6}>
-                
                 {/* SOL: Ürün Görseli */}
                 <Box flex={1}>
-                    <Paper 
-                        elevation={0} 
-                        sx={{ 
-                            p: 4, 
-                            borderRadius: 4, 
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            p: 4,
+                            borderRadius: 4,
                             bgcolor: '#f8fafc',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
                             minHeight: '400px',
                             position: 'relative',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
                         }}
                     >
-                        {/* Next.js Image optimization */}
                         <Box sx={{ position: 'relative', width: '100%', height: '400px' }}>
-                             <img 
-                                src={product.thumbnail} 
+                            <img
+                                src={product.thumbnail}
                                 alt={product.title}
-                                style={{ 
-                                    width: '100%', 
-                                    height: '100%', 
-                                    objectFit: 'contain' 
-                                }} 
+                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                             />
                         </Box>
                     </Paper>
@@ -74,13 +61,13 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
                 {/* SAĞ: Ürün Bilgileri */}
                 <Box flex={1}>
                     <Box>
-                        {/* Marka & Kategori */}
+                        {/* Marka & Kategori - API'den gelen brand ve category */}
                         <Box display="flex" gap={1} mb={2}>
                             <Chip label={product.brand} color="primary" variant="outlined" size="small" />
                             <Chip label={product.category} color="default" size="small" />
                         </Box>
 
-                        {/* Başlık */}
+                        {/* Başlık - API'den gelen title */}
                         <Typography variant="h3" component="h1" fontWeight="800" gutterBottom sx={{ color: '#1e293b' }}>
                             {product.title}
                         </Typography>
@@ -108,7 +95,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
 
                         <Divider sx={{ my: 4 }} />
 
-                        {/* Stok Durumu */}
+                        {/* Stok durumu - stock > 0 ise In Stock, değilse Out of Stock */}
                         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                             <Typography variant="subtitle1" fontWeight="600">
                                 Stock Status:
@@ -119,11 +106,23 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
                         </Box>
 
                         {/* Sepete Ekle Butonu */}
-                        <Button 
+                        <Button
                             variant="contained" 
                             size="large" 
                             fullWidth 
                             startIcon={<ShoppingCart />}
+                            disabled={product.stock <= 0}
+                            onClick={() =>
+                                dispatch(
+                                    addToCart({
+                                        productId: product.id,
+                                        quantity: 1,
+                                        title: product.title,
+                                        price: product.price,
+                                        thumbnail: product.thumbnail,
+                                    })
+                                )
+                            }
                             sx={{ 
                                 py: 2, 
                                 borderRadius: 3, 

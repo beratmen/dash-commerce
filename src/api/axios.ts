@@ -1,12 +1,10 @@
-import axios from 'axios'; // node_modules kütüphanesinden axios dosyası tanımlandı 
+import axios from 'axios';
 
-const axsiosInstance = axios.create({ // bir kutu içine bu ayarlar eklendi
+// Projenin genel API ayarları (baseURL, timeout vb.) bu örnek üzerinden yapılır.
+const axiosInstance = axios.create({
     baseURL: 'https://dummyjson.com',
     timeout: 1500, // 15sn içinde cevap gelmezse istek sonlanır
-    headers:{
-        'Content-Type': 'application/json',
-        //dilde konuştuğumuzu söylememiz gerekir. JSON paketidir, ona göre oku.
-    },
+    headers: { 'Content-Type': 'application/json' },
 });
 
-export default axsiosInstance;
+export default axiosInstance;

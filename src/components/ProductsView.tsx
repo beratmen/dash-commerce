@@ -3,12 +3,14 @@
 import React, { useEffect } from 'react';
 import {
     Container, Card, CardContent, CardMedia, Typography,
-    CircularProgress, Box, Pagination, Rating,
+    CircularProgress, Box, Pagination, Rating, Button,
 } from '@mui/material';
+import { ShoppingCart } from '@mui/icons-material';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchProductsAsync, setProducts } from '@/store/slices/productSlice';
 import { setPage } from '@/store/slices/uiSlice';
+import { addToCart } from '@/store/slices/cartSlice';
 import { ProductsViewProps } from '@/types';
 
 export default function ProductsView({ initialData }: ProductsViewProps) {
@@ -16,15 +18,12 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
     const { items, total, loading, error } = useAppSelector((state) => state.products);
     const { currentPage, itemsPerPage, searchQuery } = useAppSelector((state) => state.ui);
 
+    // İlk yüklemede initialData kullan; arama/sayfa değişince API'den çek.
     useEffect(() => {
-        // İlk yüklemede initialData kullan, sonrasında sayfa değişikliklerinde API'den çek
-        // Not: Arama yapıldıysa initialData'yı yoksaymalıyız çünkü initialData filtrelenmemiş olabilir
         if (initialData && items.length === 0 && !searchQuery) {
             dispatch(setProducts(initialData));
-            return; // İlk yüklemede API çağrısı yapma
+            return;
         }
-        
-        // Sayfa veya sayfa başı ürün sayısı değişince yeni veri çek
         const skip = (currentPage - 1) * itemsPerPage;
         dispatch(fetchProductsAsync({ limit: itemsPerPage, skip, search: searchQuery }));
     }, [dispatch, currentPage, itemsPerPage, initialData, items.length, searchQuery]);
@@ -114,6 +113,29 @@ export default function ProductsView({ initialData }: ProductsViewProps) {
                                 <Typography variant="h6" color="primary" fontWeight="bold">
                                     ${product.price}
                                 </Typography>
+                                <Button
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    startIcon={<ShoppingCart />}
+                                    disabled={product.stock <= 0}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        dispatch(
+                                            addToCart({
+                                                productId: product.id,
+                                                quantity: 1,
+                                                title: product.title,
+                                                price: product.price,
+                                                thumbnail: product.thumbnail,
+                                            })
+                                        );
+                                    }}
+                                    sx={{ mt: 1 }}
+                                >
+                                    Add to Cart
+                                </Button>
                             </CardContent>
                         </Card>
                     </Link>

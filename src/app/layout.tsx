@@ -12,33 +12,18 @@ export const metadata: Metadata = {
 
 // 2. ANA LAYOUT BİLEŞENİ
 // Bu fonksiyon, projedeki her sayfanın (home, profile, sepet vb.) ortak çatısıdır.
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode; // Sayfa içerikleri buraya "children" olarak gelir.
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
             <body>
-                {/* 3. STORE PROVIDER (Redux)
-            En dışta yer alır çünkü hem temanın hem de sayfanın 
-            Redux verilerine (örneğin karanlık mod tercihi veya kullanıcı bilgisi) 
-            ihtiyacı olabilir. */}
+                {/* 3. STORE PROVIDER (Redux) */}
                 <StoreProvider>
-
-                    {/* 4. THEME REGISTRY (MUI & CSS)
-              MUI temalarını ve sunucu taraflı stil (SSR) desteğini sağlar.
-              Tasarımsal her şey bu katmanın içindedir. */}
+                    {/* 4. THEME REGISTRY (MUI & CSS) */}
                     <ThemeRegistry>
-
-                        {/* 5. NAVIGATION (Üst Menü)
-                Her sayfada en üstte sabit olarak görünen navigasyon çubuğu. */}
+                        {/* 5. NAVIGATION (Üst Menü) */}
                         <Navigation />
-
-                        {/* 6. SAYFA İÇERİĞİ
-                Hangi sayfadaysanız o sayfanın özel kodları buraya yerleşir. */}
+                        {/* 6. SAYFA İÇERİĞİ */}
                         {children}
-
                     </ThemeRegistry>
                 </StoreProvider>
             </body>

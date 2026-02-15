@@ -1,9 +1,7 @@
 'use client';
 import { createTheme, alpha } from '@mui/material/styles';
 
-// DASH COMMERCE THEME
-// Modern, clean, and professional Teal & Slate palette.
-
+// DASH COMMERCE THEME - Modern, clean Teal & Slate palette.
 const theme = createTheme({
   palette: {
     mode: 'light',

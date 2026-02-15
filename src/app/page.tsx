@@ -1,18 +1,16 @@
-'use client'; // Bu bileşen tarayıcı tarafında çalışmalı çünkü yönlendirme işlemi tarayıcıda (Client-side) yapılır.
+'use client'; // Yönlendirme tarayıcıda yapıldığı için client component.
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-    const router = useRouter(); // Next.js'in yönlendirme aracını (router) çağırıyoruz.
+    const router = useRouter();
 
+    // Bileşen mount olduğunda kullanıcıyı /products sayfasına gönderir.
     useEffect(() => {
-        // Bileşen ekrana ilk geldiği (mount olduğu) anda çalışır:
-        // Kullanıcıyı otomatik olarak '/products' sayfasına gönderir.
         router.push('/products');
     }, [router]);
 
-    // Sayfa başka bir yere yönlendirileceği için ekrana bir şey çizmemize gerek yok.
-    // Bu yüzden 'null' (boş) dönüyoruz.
+    // Yönlendirme yapılacağı için ekrana çizim yok.
     return null;
 }
