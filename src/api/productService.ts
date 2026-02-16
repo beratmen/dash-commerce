@@ -16,7 +16,7 @@ export const fetchProducts = async (
     try {
         const url = search
             ? `/products/search?q=${search}&limit=${limit}&skip=${skip}`
-            : `/products?limit=${limit}&skip=${skip}&delay=3000`;
+            : `/products?limit=${limit}&skip=${skip}`;
         const response = await axiosInstance.get<ProductResponse>(url); //URL GET isteği gönder
         return response.data;   //API den gelen veri
     } catch (error) {

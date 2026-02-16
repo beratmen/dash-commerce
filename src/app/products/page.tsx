@@ -10,15 +10,6 @@ export default async function ProductsPage() {
     // bana 0.üründen başla ve 20 ürün getir gelen ürünleri initialData içine ata
 
     return (
-        <Suspense fallback={
-            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                {/* Suspense ile ekran boş kalmasın diye Fallback gösterir */}
-                <CircularProgress />
-                {/* Bir kez yüklenirken gösterilir sonra kaldırılır */}
-            </Box>
-        }>
-            {/* Sunucuda çekilen veri (initialData) etkileşimli ProductsView'a prop olarak geçer. */}
-            <ProductsView initialData={initialData} />
-        </Suspense>
+        <ProductsView initialData={initialData} />
     );
 }
