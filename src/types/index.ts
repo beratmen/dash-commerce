@@ -26,8 +26,8 @@ export interface ProductsViewProps {
 /** Sepetteki tek bir kalem: gösterim için gerekli alanlar snapshot olarak tutulur. */
 export interface CartItem {
     productId: number;
-    quantity: number;
+    quantity: number; // ürün sayısı
     title: string;
     price: number;
-    thumbnail: string;
+    thumbnail: string; //resim gösterimi için URL
 }
