@@ -11,6 +11,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import productReducer from './slices/productSlice';  // Ürünler state: listeleme, filtreleme vs.
 import uiReducer from './slices/uiSlice';            // UI state: tema, modal açık/kapalı vs.
 import cartReducer from './slices/cartSlice';        // Sepet state: ürünler, toplam fiyat vs.
+import favoriteReducer from './slices/favoriteSlice'; // Favoriler state: ürünler
 
 /**
  * localStorage Anahtarı
@@ -63,6 +64,21 @@ const cartPersistMiddleware =
         // 8. Middleware sonucunu döndür
         return result;
     };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const favPersistMiddleware: any = (store: any) => (next: any) => (action: any) => {
+    const result = next(action);
+    // Eğer tetiklenen action'ın adı favorites ile başlıyorsa...
+    if (action?.type?.startsWith('favorites/')) {
+        try {
+            if (typeof window !== 'undefined') {
+                const items = store.getState().favorites.items;
+                // Değişim olduğu anda ez ve kaydet
+                window.localStorage.setItem('dash-favorites', JSON.stringify(items));
+            }
+        } catch {}
+    }
+    return result;
+};
 
 /**
  * Redux Store Oluşturma Fonksiyonu
@@ -84,13 +100,15 @@ export const makeStore = () => {
 
             // cart: Redux state'te store.cart → cartReducer tarafından yönetilir
             cart: cartReducer,
+
+            favorites: favoriteReducer,
         },
 
         // MIDDLEWARE'LER: Aksiyon çalıştıktan sonra ek işlemler yapan fonksiyonlar
         middleware: (getDefaultMiddleware) =>
             // Redux'ın varsayılan middleware'lerini al (hata kontrol vs.)
             // .concat(): Kendi middleware'imizi (cartPersistMiddleware) ekle
-            getDefaultMiddleware().concat(cartPersistMiddleware),
+            getDefaultMiddleware().concat(cartPersistMiddleware, favPersistMiddleware),
     });
 };
 

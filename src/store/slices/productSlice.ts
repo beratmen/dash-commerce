@@ -60,7 +60,7 @@ const initialState: ProductState = {
     // Toplam 0 ürün
     total: 0,
 
-    // Başlangıçta yükleme durumunda
+    // Başlangıçta yükleme durumunda değil
     loading: true,
 
     // Başlangıçta hata yok

@@ -31,3 +31,9 @@ export interface CartItem {
     price: number;
     thumbnail: string; //resim gösterimi için URL
 }
+export interface FavoriteItem {
+    productId: number;
+    title: string;
+    price: number;
+    thumbnail: string;
+}

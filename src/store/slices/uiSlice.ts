@@ -55,7 +55,7 @@ const initialState: UiState = {
 
     // Başlangıçta arama sorgusu boş olacak
     searchQuery: '',
-};0
+};
 
 /**
  * ═══════════════════════════════════════════════════════════════

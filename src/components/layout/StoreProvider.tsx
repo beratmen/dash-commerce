@@ -57,6 +57,7 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
      * 3. getInitialCartItems(): localStorage'dan önceki sepet verilerini çek
      * 4. setCartItems(): Sepeti Redux state'e yükle
      */
+    // eslint-disable-next-line react-hooks/refs
     if (!storeRef.current) {
         // STEP 1: Redux store'u fabrikadan oluştur
         storeRef.current = makeStore();
@@ -86,6 +87,7 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
      *   - useAppDispatch() ve useAppSelector() hook'ları kullanılabilir hale gelir
      *   - State değiştiğinde ilgili bileşenler re-render olur
      */
+    // eslint-disable-next-line react-hooks/refs
     return <Provider store={storeRef.current!}>{children}</Provider>;
 }
 

@@ -1,7 +1,5 @@
 import { fetchProducts } from '@/api/productService';   // Ürün veri API'si
 import ProductsView from '@/components/ProductsView';   // Ürünleri gösteren bileşen
-import { Suspense } from 'react';   // Yükleme sırasında fallback göster
-import { CircularProgress, Box } from '@mui/material';  // Yükleme tüneli (spinner)
 
 // 1. ASYNC SERVER COMPONENT - await ile sunucuda veri çekilir.
 export default async function ProductsPage() {
